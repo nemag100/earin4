@@ -12,6 +12,8 @@ def main():
     while running:
         clock.tick(FPS)
         board = Board()
+        board.draw_squares_and_pieces(WINDOW)
+        pygame.display.update()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -19,8 +21,6 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pass
             
-        board.draw_squares(WINDOW)
-        pygame.display.update()
     pygame.quit()
     
 main()
