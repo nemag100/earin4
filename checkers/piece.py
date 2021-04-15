@@ -1,4 +1,4 @@
-from .constants import BLACK, SQUARE_SIZE, WHITE, GREEN, PADDING, BORDER_THICKNESS
+from .constants import BLACK, SQUARE_SIZE, WHITE, PADDING, BORDER_THICKNESS, GOLD
 import pygame
 
 class Piece:
@@ -26,16 +26,22 @@ class Piece:
     def become_king(self):
         self.king == True
         
+        
     def draw(self, window):
         '''Draws the piece as a circle around its x and y'''
         radius = SQUARE_SIZE // 2 - PADDING
         border_color = ""
+        
         if self.color == WHITE:
             border_color = BLACK
         else:
             border_color = WHITE
+            
         pygame.draw.circle(window, border_color, (self.x, self.y), radius + BORDER_THICKNESS)
         pygame.draw.circle(window, self.color, (self.x, self.y), radius)
+        if self.king:
+           pygame.draw.circle(window, GOLD, (self.x, self.y), radius // 2)
+        
         
     def __repr__(self):
         '''object representation, return the strings color (for debugging)'''

@@ -1,4 +1,5 @@
 import pygame
+import os
 #Window properties
 WIDTH, HEIGHT = 800, 800
 
@@ -18,6 +19,7 @@ BLACK   =  (0, 0, 0)
 WHITE   =  (255, 255, 255)
 GRAY    =  (128, 128, 128)
 BUFF    =  (218, 160, 109)
+GOLD    =  (255, 215, 0)
 
 #Game properties
 FPS = 60
