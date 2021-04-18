@@ -47,6 +47,9 @@ class Piece:
         '''object representation, return the strings color (for debugging)'''
         return str(self.color)
         
-            
+    def move(self, row, column):
+        self.row = row
+        self.column = column
+        self.calculate_position()
             
             

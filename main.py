@@ -8,10 +8,14 @@ pygame.display.set_caption('EARIN Checkers @by: Szwed, Zdanowski')
 def main():
     running = True
     clock = pygame.time.Clock()
+    board = Board()
+    
+    piece = board.get_piece(0,1)
+    board.move_piece(piece, 4,3)
     
     while running:
         clock.tick(FPS)
-        board = Board()
+     
         board.draw_squares_and_pieces(WINDOW)
         pygame.display.update()
 

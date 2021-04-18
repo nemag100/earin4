@@ -1,5 +1,5 @@
 import pygame
-from .constants import BLACK, GRAY, ROWS, COLUMNS, SQUARE_SIZE, WHITE, BUFF
+from .constants import BLACK, GRAY, ROWS, COLUMNS, SQUARE_SIZE, WHITE
 from .piece import Piece
 
 class Board:
@@ -46,9 +46,23 @@ class Board:
                 if piece != 0:
                     piece.draw(window)
                 
-    
-                    
                 
+    def move_piece(self, piece, row, column):
+        '''Delete a piece and create it in new position'''
+        #pythonic clever swap
+        self.board[piece.row][piece.column], self.board[row][column]  = self.board[row][column], self.board[piece.row][piece.column]
+        piece.move(row,column)
+                      
+        if row == ROWS or row == 0:
+            if piece.king == False:
+                piece.become_king()
+                if piece.color == WHITE:
+                    self.white_kings += 1
+                else:
+                    self.red_kings += 1        
+                    
+    def get_piece(self,row,col):
+        return self.board[row][col]
         
         
         
