@@ -1,5 +1,4 @@
 import pygame
-import os
 #Window properties
 WIDTH, HEIGHT = 800, 800
 

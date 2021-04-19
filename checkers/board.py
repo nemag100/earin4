@@ -11,7 +11,6 @@ class Board:
         self.board = []
         self.initialize_pieces()
         
-        self.selected_piece = None
         self.black_pcs_left = self.white_pcs_left = 12
         self.white_kings = self.black_kings = 0
         
@@ -45,8 +44,7 @@ class Board:
                 piece = self.board[row][column]
                 if piece != 0:
                     piece.draw(window)
-                
-                
+                                
     def move_piece(self, piece, row, column):
         '''Delete a piece and create it in new position'''
         #pythonic clever swap
@@ -63,6 +61,9 @@ class Board:
                     
     def get_piece(self,row,col):
         return self.board[row][col]
+    
+    def get_valid_moves():
+        pass
         
         
         
