@@ -52,6 +52,8 @@ class Game:
     def move_piece(self, row, column):
         if self._is_valid_move(row, column):
             self.board.move_piece(self.selected_piece, row, column)
+            for piece in self.valid_moves[(row,column)]: #this dictionary entry contains the pieces to be removed
+                self.remove_piece(piece)
             self.change_turn()
             self.valid_moves = {}
             
@@ -63,7 +65,9 @@ class Game:
         else:
             self.turn = PLAYER1
     
-            
+    def remove_piece(self, piece):
+        self.board.remove_piece(*piece)
+    
     def draw_valid_moves(self, moves):
         for move in moves:
             row, column = move

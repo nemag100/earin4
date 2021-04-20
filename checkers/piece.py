@@ -7,6 +7,7 @@ class Piece:
         self.column = column
         self.color = color
         self.king = False
+        self.simulated_king = False
         #white is moving up = direction is negative
         #black is moving down = direction is positives 
         

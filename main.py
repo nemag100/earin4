@@ -30,7 +30,6 @@ def main():
                 mouse_pos = pygame.mouse.get_pos()
                 row, col  = get_mouse_row_column(mouse_pos)
                 game.select_piece(row, col)
-                
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 row, col  = get_mouse_row_column(mouse_pos)

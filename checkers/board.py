@@ -117,6 +117,7 @@ class Board:
                     new_jump_path.append((middle_row, middle_col))
                     moves[(new_row, new_col)] = new_jump_path
                     # recursive call
+                    
                     moves.update(self._get_valid_moves(piece, new_row, new_col, new_jump_path, step_size))
         return moves    
     
@@ -147,15 +148,14 @@ class Board:
         
    
 
-    def remove(self, pieces):
-        for piece in pieces:
-            self.board[piece.row][piece.column] = 0
-            if piece != 0:
-                if piece.color == PLAYER2:
-                    self.black_pcs_left -= 1
-                else:
-                    self.white_pcs_left -= 1
-                    
+    def remove_piece(self, row, col):
+        removed_piece = self.get_piece(row, col)
+        self.board[removed_piece.row][removed_piece.column] = 0
+        if removed_piece.color == PLAYER2:
+            self.player2_pcs_left -= 1
+        else:
+            self.player1_pcs_left -= 1
+                
     def winner(self):
         if self.white_pcs_left <= 0:
             return PLAYER2
