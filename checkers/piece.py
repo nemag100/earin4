@@ -1,4 +1,4 @@
-from .constants import SQUARE_SIZE, PADDING, BORDER_THICKNESS, GOLD, PLAYER1, PLAYER1_BORDER_COLOR, PLAYER2_BORDER_COLOR
+from .constants import SQUARE_SIZE, PADDING, BORDER_THICKNESS, GOLD, PLAYER1, PLAYER1_BORDER_COLOR, PLAYER2_BORDER_COLOR, ALL_KINGS
 import pygame
 
 class Piece:
@@ -6,7 +6,7 @@ class Piece:
         self.row = row
         self.column = column
         self.color = color
-        self.king = True
+        self.king = ALL_KINGS
         self.simulated_king = False
         #white is moving up = direction is negative
         #black is moving down = direction is positives 

@@ -10,6 +10,7 @@ VALID_MOVES_MARKER_RADIUS = 15
 #Piece properties
 PADDING = 10 #distance between piece and square
 BORDER_THICKNESS = 2
+ALL_KINGS = False #True/False
 
 #RGB colors
 RED     =  (255, 0, 0)
