@@ -88,9 +88,45 @@ class Board:
     def get_valid_moves(self, piece):
         moves = {}
         moves.update(self._get_valid_moves(piece, piece.row, piece.column, [], 2))
+
         if len(moves) == 0: 
             moves.update(self._get_valid_moves(piece, piece.row, piece.column, [], 1))
-
+        else:
+            
+        #delete moves contained in another move 
+        # #
+        # 
+        # 
+        # 
+        # 
+        # 
+        # 
+        # 
+        # 
+        # 
+        # fix this:
+            to_del = []
+            del_me = False
+            for key, val in moves.items():
+                for k, v in moves.items():
+                    for i in range(0, len(val)):
+                        if val[i] in v and len(v) - len(val) == 1:
+                            del_me = True
+                        else:
+                            del_me = False
+                            break
+                    if del_me:
+                        to_del.append(key)
+            for key in set(to_del): #as set invoke del only once even if duplicated entries in list exist
+                del moves[key]
+        #end of things to fix
+        
+        
+        
+        
+        
+        
+           
         return moves
     
     def _get_valid_moves(self, piece, row, col, jump_path, step_size):
