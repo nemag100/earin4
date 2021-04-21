@@ -1,4 +1,5 @@
 import pygame
+from pygame.constants import WINDOWENTER
 from checkers.constants import FPS, WIDTH, HEIGHT, SQUARE_SIZE, PLAYER1, PLAYER2
 from checkers.board import Board
 from checkers.game import Game
@@ -35,8 +36,6 @@ def setup_board_test2(game):
         3. Use game.set_turn(player) or game.change_turn()
     '''
     game.board.remove_all_pieces()
-    game.set_turn(PLAYER2)
-    game.change_turn()
     game.board.add_piece(2, 1, PLAYER1, king=True)
     game.board.add_piece(3, 2, PLAYER2, king=True)
     game.board.add_piece(3, 4, PLAYER2, king=True)
@@ -45,20 +44,41 @@ def setup_board_test2(game):
     game.board.add_piece(5, 6, PLAYER2, king=True)
     game.board.add_piece(6, 7, PLAYER1, king=True)
     game.board.add_piece(6, 1, PLAYER1, king=True)
+    game.get_all_valid_moves_of_current_player()
     
 def setup_board_test3(game): #testing win condition
     game.board.remove_all_pieces()
     game.set_turn(PLAYER2)
-    game.board.add_piece(2, 1, PLAYER1, king=True)
-    game.board.add_piece(3, 2, PLAYER2, king=True)
+    game.board.add_piece(4, 1, PLAYER1, king=False)
+    game.board.add_piece(5, 2, PLAYER2, king=False)
+    
+def setup_board_test4(game): #testing no possible moves win condition
+    game.board.remove_all_pieces()
+    game.board.add_piece(0, 7, PLAYER1, king=False)
+    game.board.add_piece(3, 0, PLAYER1, king=False)
+    game.board.add_piece(3, 2, PLAYER1, king=False)
+    game.board.add_piece(3, 4, PLAYER1, king=False)
+    game.board.add_piece(3, 6, PLAYER1, king=False)
+    game.board.add_piece(2, 1, PLAYER1, king=False)
+    game.board.add_piece(2, 3, PLAYER1, king=False)
+    game.board.add_piece(2, 5, PLAYER1, king=False)
+    game.board.add_piece(2, 7, PLAYER1, king=False)
+    game.board.add_piece(4, 1, PLAYER2, king=False)
+    game.board.add_piece(4, 3, PLAYER2, king=False)
+    game.board.add_piece(4, 5, PLAYER2, king=False)
+    game.board.add_piece(4, 7, PLAYER2, king=False)
+    game.board.add_piece(5, 0, PLAYER2, king=False)
+    game.board.add_piece(5, 2, PLAYER2, king=False)
+    game.board.add_piece(5, 4, PLAYER2, king=False)
+    game.board.add_piece(5, 6, PLAYER2, king=False)
+    game.board.add_piece(7, 0, PLAYER2, king=False)
 
 def main():
     clock = pygame.time.Clock()
     game = Game(WINDOW)
-    game.set_turn(PLAYER2)
-    game.change_turn()
-    setup_board_test2(game)
-    while True:
+
+    setup_board_test3(game)
+    while game.winner == None:
         clock.tick(FPS)
 
 
@@ -76,10 +96,10 @@ def main():
                 row, col  = get_mouse_row_column(mouse_pos)
                 
                 game.move_piece(row, col)
-        game.update()            
+        game.update_display()            
         
 #    pygame.quit()
-    
+    game.win_message()
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

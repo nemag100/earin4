@@ -9,6 +9,15 @@ class Game:
         self.window = window    
         self._init()
    
+    def _init(self):
+        self.selected_piece = None
+        self.board = Board()
+        self.turn = PLAYER1
+        self.valid_moves = {} #for a piece
+        self.all_valid_moves = self.get_all_valid_moves_of_current_player()
+        #for determining win condition   
+        self.winner = None
+        
     def get_all_pieces_of_current_player(self):
         pieces = []
         for piece in self.board.get_all_pieces():
@@ -23,8 +32,7 @@ class Game:
             return valid_moves
         else:
             return {}
-        
-    
+         
     def get_all_moves_of_current_player(self):
         #get all nonempty moves for all pieces
         all_moves = {}
@@ -47,9 +55,6 @@ class Game:
         else:
             return all_moves
                     
-            
-                            
-
     def update_winner(self):
         if self.board.winner() != None:
             print("Winner is: " + self.board.winner())
@@ -59,18 +64,13 @@ class Game:
         pygame.display.update()
         return True
     
-    def update(self):
+    def update_display(self):
         self.board.draw_board(self.window)
         self.draw_valid_moves(self.valid_moves)
         pygame.display.update()
     
-    def _init(self):
-        self.selected_piece = None
-        self.board = Board()
-        self.turn = PLAYER1
-        self.valid_moves = {} #for a piece
-        self.all_valid_moves = []#for determining win condition
 
+    
     def reset(self): #resetting is the same as initializing once again
         self._init()
     
@@ -88,13 +88,7 @@ class Game:
             
             return True
         return False 
-        
-      #  if self.selected_piece:
-      ##      result = self._move_piece(row, column)
-       #     if not result: #piece not moved, reselect it
-      #          self.selected_piece = None
-     #           self.select_piece(row, column)
-        
+
     def _is_valid_move(self, row, column):
         if (row, column) in self.valid_moves:
             return True
@@ -109,21 +103,23 @@ class Game:
             self.change_turn()
             self.valid_moves = {}
             
-
-    
     def change_turn(self):
         self.valid_moves = {}
         if self.turn == PLAYER1:
             self.turn = PLAYER2
+            enemy = "PLAYER1"
         else:
             self.turn = PLAYER1
+            enemy = "PLAYER2"
         #at the beginning of turn check lose condition: I have 0 pieces or I can't move:
-    
-            
-            
-    
+        self.all_valid_moves = self.get_all_valid_moves_of_current_player()
+        print("Turn Changed", self.all_valid_moves)
+        if not self.all_valid_moves or self._winner():#no moves remaining
+            self.winner = enemy
+        
     def set_turn(self, player):
         self.valid_moves = {}
+        self.all_valid_moves = self.get_all_valid_moves_of_current_player()
         self.turn = player
     
     def remove_piece(self, piece):
@@ -134,10 +130,20 @@ class Game:
             row, column = move
             pygame.draw.circle(self.window, GREEN, (column * SQUARE_SIZE + SQUARE_SIZE // 2, row * SQUARE_SIZE + SQUARE_SIZE // 2), VALID_MOVES_MARKER_RADIUS)
         
-    def winner(self):
-        return self.board.winner()  
+    def _winner(self):
+        winner = self.board.winner()
+        if winner != None:
+            return winner
+        else:
+            return False
             
-        
+    def win_message(self):
+        print("WINNER IS: ", self.winner)
+        self.change_turn()
+        for piece in self.get_all_pieces_of_current_player():
+            piece.king = True
+        self.update_display()
+        print("Waiting for exit.")   
         
                       
     

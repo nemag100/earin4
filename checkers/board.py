@@ -205,9 +205,9 @@ class Board:
                      
     def winner(self):
         if self.player1_pcs_left != None and self.player1_pcs_left <= 0:
-            return "PLAYER2"
+            return PLAYER2
         elif self.player2_pcs_left != None and self.player2_pcs_left <=0:
-            return "PLAYER1"
+            return PLAYER1
         return None
                 
                 
