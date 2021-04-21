@@ -3,11 +3,52 @@ from .board import Board
 from .piece import Piece
 from .constants import PLAYER1, PLAYER2, GREEN, SQUARE_SIZE, VALID_MOVES_MARKER_RADIUS
 
+
 class Game:
     def __init__(self, window):
         self.window = window    
         self._init()
+   
+    def get_all_pieces_of_current_player(self):
+        pieces = []
+        for piece in self.board.get_all_pieces():
+            if piece.color==self.turn:
+                pieces.append(piece)
+        return pieces
+    
+    def get_all_valid_moves(self, piece):
+        valid_moves = self.get_all_valid_moves_of_current_player().get((piece.row, piece.column))
+        print(self.get_all_valid_moves_of_current_player())
+        if valid_moves != None:
+            return valid_moves
+        else:
+            return {}
+        
+    
+    def get_all_moves_of_current_player(self):
+        #get all nonempty moves for all pieces
+        all_moves = {}
+        pieces = self.get_all_pieces_of_current_player()
+        for piece in pieces:
+            piece_moves = self.board.get_valid_moves(piece)
+            if piece_moves:
+                all_moves[(piece.row, piece.column)] = piece_moves        
+        return all_moves
+    
+    def get_all_valid_moves_of_current_player(self):
+        all_moves = self.get_all_moves_of_current_player()
+        only_jumps = {}
+        for piece_coordinates, possible_moves in all_moves.items():
+            for destination, jump in possible_moves.items():
+                if jump:
+                    only_jumps[piece_coordinates] = possible_moves
+        if only_jumps:
+            return only_jumps
+        else:
+            return all_moves
+                    
             
+                            
 
     def update_winner(self):
         if self.board.winner() != None:
@@ -28,7 +69,7 @@ class Game:
         self.board = Board()
         self.turn = PLAYER1
         self.valid_moves = {} #for a piece
-        self.all_valid_moves = {}#for determining win condition
+        self.all_valid_moves = []#for determining win condition
 
     def reset(self): #resetting is the same as initializing once again
         self._init()
@@ -42,15 +83,12 @@ class Game:
         piece = self.board.get_piece(row, column)
         if piece != 0 and piece.color == self.turn: #selected piece of my color
             self.selected_piece = piece
-            self.valid_moves = self.board.get_valid_moves(piece)
-            self.all_valid_moves[(piece.row,piece.column)]={}
-            self.all_valid_moves[(piece.row,piece.column)].update(self.valid_moves)
-            print("All valid moves: ")
-            print(self.all_valid_moves)
-            print("end")
-            return True
-        return False
+            self.valid_moves = self.get_all_valid_moves(piece)
+            print("all valid moves:", self.valid_moves)
             
+            return True
+        return False 
+        
       #  if self.selected_piece:
       ##      result = self._move_piece(row, column)
        #     if not result: #piece not moved, reselect it

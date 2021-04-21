@@ -63,7 +63,15 @@ class Board:
             return self.board[row][column]
         else: #index out of range
             return None
-        
+    
+    def get_all_pieces(self):
+        pieces = []
+        for row in self.board:
+            for piece in row:
+                if piece != 0:
+                    pieces.append(piece)
+        return pieces
+
     def set_king(self, piece):
         if piece.is_king() == False:
             piece.set_king()
@@ -117,8 +125,7 @@ class Board:
 
         if len(moves) == 0: 
             moves.update(self._get_valid_moves(piece, piece.row, piece.column, [], 1))
-        else:
-            
+        else:       
         #delete moves contained in another move 
             to_del = set() #store keys of entries to delete
             del_me = False #flag to delete currently examined key
@@ -186,11 +193,6 @@ class Board:
         
         return True
            
-                
-    
-        
-   
-
     def remove_piece(self, row, col):
         if (0 <= row < ROWS and 0 <= col < COLUMNS):
             piece = self.get_piece(row,col)
@@ -200,8 +202,7 @@ class Board:
             elif self.player1_pcs_left != None:
                 self.player1_pcs_left -= 1
             self.board[row][col] = 0    
-                
-                
+                     
     def winner(self):
         if self.player1_pcs_left != None and self.player1_pcs_left <= 0:
             return "PLAYER2"
