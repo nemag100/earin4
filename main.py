@@ -53,7 +53,7 @@ def setup_board_test3(game): #testing win condition
 def main():
     clock = pygame.time.Clock()
     game = Game(WINDOW)
-    setup_board_test2(game)
+  #  setup_board_test2(game)
     while game.update_winner():
         clock.tick(FPS)
 
@@ -61,6 +61,7 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+                return 0
                 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()

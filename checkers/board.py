@@ -28,14 +28,12 @@ class Board:
                         self.board[row].append(0)
                 else:
                     self.board[row].append(0)
-        
-
+    
     def draw_board(self, window):
         '''draw squares and stored pieces'''
         self.draw_squares(window)
         self.draw_pieces(window)    
-
-        
+      
     def draw_squares(self, window):
         '''Draws the board pattern: alternating black and white squares in window'''
         window.fill(LEFT_CORNER_SQUARE_COLOR)
@@ -50,8 +48,7 @@ class Board:
                 piece = self.get_piece(row,column)
                 if piece != 0:
                     piece.draw(window)
-    
-                                
+                                 
     def move_piece(self, piece, new_row, new_column):
         '''Delete a piece and create it in new position'''
         #pythonic clever swap
@@ -60,8 +57,7 @@ class Board:
         
         if new_row == ROWS - 1 or new_row == 0: #moved to the edge of the board
             self.set_king(piece)       
-
-                   
+                 
     def get_piece(self,row,column):
         if 0 <= row < ROWS and 0 <= column < COLUMNS:
             return self.board[row][column]
@@ -99,10 +95,7 @@ class Board:
                     self.player2_pcs_left = 1
                 else:
                     self.player2_pcs_left += 1
-            
-            
-                 
-               
+                         
     def remove_all_pieces(self):
         for row in range(ROWS):
             for col in range(COLUMNS):
@@ -111,19 +104,14 @@ class Board:
         self.player2_pcs_left = None
         self.player1_kings = 0
         self.player2_kings = 0
-
     
-        
     def is_king(self, piece):
         return piece.is_king()
-      
-###############poniższe do naprawy
-
-
-
-
-    
+          
     def get_valid_moves(self, piece):
+        '''returns a dictionary of a valid moves for the given piece
+           moves are considered valid according to checker rules
+        '''
         moves = {}
         moves.update(self._get_valid_moves(piece, piece.row, piece.column, [], 2))
 
@@ -145,15 +133,7 @@ class Board:
                     if del_me:
                         to_del.add(key) #if the whole shorter sequence is included in the longer one, add the shorter's key to delete
             for key in to_del: 
-                del moves[key] #remove all entries flagged to delete
-
-        
-        
-        
-        
-        
-        
-           
+                del moves[key] #remove all entries flagged to delete     
         return moves
     
     def _get_valid_moves(self, piece, row, col, jump_path, step_size):

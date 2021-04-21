@@ -28,6 +28,7 @@ class Game:
         self.board = Board()
         self.turn = PLAYER1
         self.valid_moves = {} #for a piece
+        self.all_valid_moves = {}#for determining win condition
 
     def reset(self): #resetting is the same as initializing once again
         self._init()
@@ -42,6 +43,11 @@ class Game:
         if piece != 0 and piece.color == self.turn: #selected piece of my color
             self.selected_piece = piece
             self.valid_moves = self.board.get_valid_moves(piece)
+            self.all_valid_moves[(piece.row,piece.column)]={}
+            self.all_valid_moves[(piece.row,piece.column)].update(self.valid_moves)
+            print("All valid moves: ")
+            print(self.all_valid_moves)
+            print("end")
             return True
         return False
             
