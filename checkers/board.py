@@ -82,14 +82,36 @@ class Board:
         '''
         if 0 <= row < ROWS and 0 <= column < COLUMNS:
 
-            self.board[row][column] = Piece(row, column, player)
-            self.board[row][column].king = king     
+            piece = self.board[row][column] = Piece(row, column, player)
+            piece.king = king
+            if piece.color == PLAYER1:
+                if self.player1_pcs_left == None:
+                    self.player1_pcs_left = 1
+                    if king:
+                        self.player1_kings += 1
+                else:
+                    self.player1_pcs_left += 1
+                    if king:
+                        self.player2_kings += 1
+            
+            if piece.color == PLAYER2:
+                if self.player2_pcs_left == None:
+                    self.player2_pcs_left = 1
+                else:
+                    self.player2_pcs_left += 1
+            
+            
+                 
                
     def remove_all_pieces(self):
         for row in range(ROWS):
             for col in range(COLUMNS):
                 self.remove_piece(row,col)
-    
+        self.player1_pcs_left = None #prevents from instantly winning
+        self.player2_pcs_left = None
+        self.player1_kings = 0
+        self.player2_kings = 0
+
     
         
     def is_king(self, piece):
@@ -193,18 +215,18 @@ class Board:
         if (0 <= row < ROWS and 0 <= col < COLUMNS):
             piece = self.get_piece(row,col)
             
-            if piece != None and piece != 0 and piece.color == PLAYER2:
+            if piece != None and piece != 0 and self.player2_pcs_left != None and piece.color == PLAYER2:
                 self.player2_pcs_left -= 1
-            else:
+            elif self.player1_pcs_left != None:
                 self.player1_pcs_left -= 1
             self.board[row][col] = 0    
                 
                 
     def winner(self):
-        if self.white_pcs_left <= 0:
-            return PLAYER2
-        elif self.black_pcs_left <=0:
-            return PLAYER1
+        if self.player1_pcs_left != None and self.player1_pcs_left <= 0:
+            return "PLAYER2"
+        elif self.player2_pcs_left != None and self.player2_pcs_left <=0:
+            return "PLAYER1"
         return None
                 
                 

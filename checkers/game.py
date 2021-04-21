@@ -9,6 +9,15 @@ class Game:
         self._init()
             
 
+    def update_winner(self):
+        if self.board.winner() != None:
+            print("Winner is: " + self.board.winner())
+            return False
+        self.board.draw_board(self.window)
+        self.draw_valid_moves(self.valid_moves)
+        pygame.display.update()
+        return True
+    
     def update(self):
         self.board.draw_board(self.window)
         self.draw_valid_moves(self.valid_moves)
@@ -19,7 +28,6 @@ class Game:
         self.board = Board()
         self.turn = PLAYER1
         self.valid_moves = {} #for a piece
-        self.all_valid_moves = {}
 
     def reset(self): #resetting is the same as initializing once again
         self._init()
@@ -53,10 +61,11 @@ class Game:
         if self._is_valid_move(row, column):
             self.board.move_piece(self.selected_piece, row, column)
             for piece in self.valid_moves[(row,column)]: #this dictionary entry contains the pieces to be removed
-                self.remove_piece(piece)
+                self.remove_piece(piece)    
             self.change_turn()
             self.valid_moves = {}
             
+
     
     def change_turn(self):
         self.valid_moves = {}
@@ -64,6 +73,10 @@ class Game:
             self.turn = PLAYER2
         else:
             self.turn = PLAYER1
+        #at the beginning of turn check lose condition: I have 0 pieces or I can't move:
+    
+            
+            
     
     def set_turn(self, player):
         self.valid_moves = {}
