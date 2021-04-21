@@ -13,6 +13,7 @@ def get_mouse_row_column(mouse_pos):
     return row, column
 
 
+
 def main():
     running = True
     clock = pygame.time.Clock()

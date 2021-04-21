@@ -75,8 +75,7 @@ class Game:
         
     def winner(self):
         return self.board.winner()  
-        
-        
+            
         
         
                       

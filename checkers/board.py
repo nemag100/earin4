@@ -94,32 +94,21 @@ class Board:
         else:
             
         #delete moves contained in another move 
-        # #
-        # 
-        # 
-        # 
-        # 
-        # 
-        # 
-        # 
-        # 
-        # 
-        # fix this:
-            to_del = []
-            del_me = False
-            for key, val in moves.items():
-                for k, v in moves.items():
-                    for i in range(0, len(val)):
-                        if val[i] in v and len(v) - len(val) == 1:
-                            del_me = True
+            to_del = set() #store keys of entries to delete
+            del_me = False #flag to delete currently examined key
+            for key, val in moves.items(): #compare the dictionary entries
+                for k, v in moves.items(): #which differ by 1 in length
+                    for i in range(0, len(val)): #and shorter value is included in longer
+                        if val[i] == v[i] and len(v) - len(val) == 1:
+                            del_me = True #as long as the elements are the same keep the flag as true
                         else:
-                            del_me = False
+                            del_me = False #unique element detected = sequences are different, compare with next one
                             break
                     if del_me:
-                        to_del.append(key)
-            for key in set(to_del): #as set invoke del only once even if duplicated entries in list exist
-                del moves[key]
-        #end of things to fix
+                        to_del.add(key) #if the whole shorter sequence is included in the longer one, add the shorter's key to delete
+            for key in to_del: 
+                del moves[key] #remove all entries flagged to delete
+
         
         
         
