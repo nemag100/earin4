@@ -28,6 +28,7 @@ class Board:
                         self.board[row].append(0)
                 else:
                     self.board[row].append(0)
+        
 
     def draw_board(self, window):
         '''draw squares and stored pieces'''
@@ -62,7 +63,7 @@ class Board:
 
                    
     def get_piece(self,row,column):
-        if row < ROWS and column < COLUMNS:
+        if 0 <= row < ROWS and 0 <= column < COLUMNS:
             return self.board[row][column]
         else: #index out of range
             return None
@@ -74,7 +75,22 @@ class Board:
                 self.player1_kings += 1
             else:
                 self.player2_kings += 1
-            
+    
+    def add_piece(self, row, column, player, king):
+        ''' use for testing purposes only, adds any piece to any position,
+            overwriting existing one
+        '''
+        if 0 <= row < ROWS and 0 <= column < COLUMNS:
+
+            self.board[row][column] = Piece(row, column, player)
+            self.board[row][column].king = king     
+               
+    def remove_all_pieces(self):
+        for row in range(ROWS):
+            for col in range(COLUMNS):
+                self.remove_piece(row,col)
+    
+    
         
     def is_king(self, piece):
         return piece.is_king()
@@ -99,7 +115,7 @@ class Board:
             for key, val in moves.items(): #compare the dictionary entries
                 for k, v in moves.items(): #which differ by 1 in length
                     for i in range(0, len(val)): #and shorter value is included in longer
-                        if val[i] == v[i] and len(v) - len(val) == 1:
+                        if len(v) - len(val) == 1 and val[i] == v[i]:
                             del_me = True #as long as the elements are the same keep the flag as true
                         else:
                             del_me = False #unique element detected = sequences are different, compare with next one
@@ -174,12 +190,15 @@ class Board:
    
 
     def remove_piece(self, row, col):
-        removed_piece = self.get_piece(row, col)
-        self.board[removed_piece.row][removed_piece.column] = 0
-        if removed_piece.color == PLAYER2:
-            self.player2_pcs_left -= 1
-        else:
-            self.player1_pcs_left -= 1
+        if (0 <= row < ROWS and 0 <= col < COLUMNS):
+            piece = self.get_piece(row,col)
+            
+            if piece != None and piece != 0 and piece.color == PLAYER2:
+                self.player2_pcs_left -= 1
+            else:
+                self.player1_pcs_left -= 1
+            self.board[row][col] = 0    
+                
                 
     def winner(self):
         if self.white_pcs_left <= 0:

@@ -65,6 +65,10 @@ class Game:
         else:
             self.turn = PLAYER1
     
+    def set_turn(self, player):
+        self.valid_moves = {}
+        self.turn = player
+    
     def remove_piece(self, piece):
         self.board.remove_piece(*piece)
     

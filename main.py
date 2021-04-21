@@ -1,5 +1,5 @@
 import pygame
-from checkers.constants import FPS, WIDTH, HEIGHT, SQUARE_SIZE
+from checkers.constants import FPS, WIDTH, HEIGHT, SQUARE_SIZE, PLAYER1, PLAYER2
 from checkers.board import Board
 from checkers.game import Game
 
@@ -13,12 +13,26 @@ def get_mouse_row_column(mouse_pos):
     return row, column
 
 
+def setup_board_test1(game):
+    '''Manual testing tools:
+        1. Use game.board.remove_all_pieces()
+        2. Use game.board.add_piece to add any pieces. remember to add only on black squares!
+        3. Use game.set_turn(player) or game.change_turn()
+    '''
+    game.board.remove_all_pieces()
+    game.set_turn(PLAYER1)
+    game.board.add_piece(2, 1, PLAYER1, king=True)
+    game.board.add_piece(3, 2, PLAYER2, king=True)
+    game.board.add_piece(3, 4, PLAYER2, king=True)
+    game.board.add_piece(1, 4, PLAYER2, king=True)
+    game.board.add_piece(3, 6, PLAYER2, king=True)
+    game.board.add_piece(5, 6, PLAYER2, king=True)
 
 def main():
     running = True
     clock = pygame.time.Clock()
     game = Game(WINDOW)
-
+    setup_board_test1(game)
     while running:
         clock.tick(FPS)
 
