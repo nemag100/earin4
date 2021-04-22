@@ -3,6 +3,8 @@ from pygame.constants import WINDOWENTER
 from checkers.constants import FPS, WIDTH, HEIGHT, SQUARE_SIZE, PLAYER1, PLAYER2
 from checkers.board import Board
 from checkers.game import Game
+from checkers.display import Display
+from checkers.minmax import Minmax
 
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('EARIN Checkers @by: Szwed, Zdanowski')
@@ -73,14 +75,17 @@ def setup_board_test4(game): #testing no possible moves win condition
     game.board.add_piece(5, 6, PLAYER2, king=False)
     game.board.add_piece(7, 0, PLAYER2, king=False)
 
-def main():
-    clock = pygame.time.Clock()
-    game = Game(WINDOW)
 
-    #setup_board_test3(game)
+
+
+def play_vs_human():
+    clock = pygame.time.Clock()
+    game = Game()
+    display = Display(WINDOW, game)
+
+    #setup_board_test4(game)
     while game.winner == None:
         clock.tick(FPS)
-
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -91,18 +96,65 @@ def main():
                 mouse_pos = pygame.mouse.get_pos()
                 row, col  = get_mouse_row_column(mouse_pos)
                 game.select_piece(row, col)
+               
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 row, col  = get_mouse_row_column(mouse_pos)
                 
                 game.move_piece(row, col)
-        game.update_display()            
+        display.update()            
         
-#    pygame.quit()
     game.win_message()
+    display.update() 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
          #execution ended, winner is determined, wait for clicking x
+         
+def play_vs_ai():
+    ai_player = PLAYER2
+    clock = pygame.time.Clock()
+    game = Game()
+    display = Display(WINDOW, game)
+    ai = Minmax(ai_player, depth=6)
+    display.update()
+
+
+    #setup_board_test4(game)
+    while game.winner == None:
+        clock.tick(FPS)
+
+        if  game.turn == ai_player:
+            game.board = ai.board_after_ai_move(game)
+            game.change_turn()
+            
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return 0
+                
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                row, col  = get_mouse_row_column(mouse_pos)
+                game.select_piece(row, col)
+               
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                row, col  = get_mouse_row_column(mouse_pos)
+                
+                game.move_piece(row, col)
+        display.update()            
+        
+    game.win_message()
+    display.update() 
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+         #execution ended, winner is determined, wait for clicking x
+    
+def main():
+    play_vs_ai()
+
 main()

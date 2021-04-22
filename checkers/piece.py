@@ -8,6 +8,8 @@ class Piece:
         self.color = color
         self.king = ALL_KINGS
         self.simulated_king = False
+        self.player = None
+        self.set_player()
         #white is moving up = direction is negative
         #black is moving down = direction is positives 
         
@@ -18,6 +20,11 @@ class Piece:
         self.direction = 0
         self._set_direction()
 
+    def set_player(self):
+        if self.color == PLAYER1:
+            self.player = "P1"
+        else:
+            self.player = "P2"
 
 
     def _calculate_drawing_position(self):
@@ -61,6 +68,8 @@ class Piece:
   #      '''object representation, return the strings color (for debugging)'''
    #     return str(self.color)
         
-
+    def __repr__(self):
+        '''object representation, return the strings color (for debugging)'''
+        return str(self.player)
             
             

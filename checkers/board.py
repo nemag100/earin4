@@ -197,10 +197,11 @@ class Board:
         if (0 <= row < ROWS and 0 <= col < COLUMNS):
             piece = self.get_piece(row,col)
             
-            if piece != None and piece != 0 and self.player2_pcs_left != None and piece.color == PLAYER2:
-                self.player2_pcs_left -= 1
-            elif self.player1_pcs_left != None:
-                self.player1_pcs_left -= 1
+            if piece != None and piece != 0:
+                if self.player2_pcs_left != None and piece.color == PLAYER2:
+                    self.player2_pcs_left -= 1
+                elif self.player1_pcs_left != None and piece.color == PLAYER1:
+                    self.player1_pcs_left -= 1
             self.board[row][col] = 0    
                      
     def winner(self):
