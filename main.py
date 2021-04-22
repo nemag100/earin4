@@ -77,7 +77,7 @@ def main():
     clock = pygame.time.Clock()
     game = Game(WINDOW)
 
-    setup_board_test3(game)
+    #setup_board_test3(game)
     while game.winner == None:
         clock.tick(FPS)
 
