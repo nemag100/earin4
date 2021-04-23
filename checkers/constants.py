@@ -33,7 +33,11 @@ PLAYER2_BORDER_COLOR = WHITE
 LEFT_CORNER_SQUARE_COLOR = BLACK
 RIGHT_CORNER_SQUARE_COLOR = GRAY
 
-
+#Heuristic modes
+CLASSIC = 'classic'
+SQUARED_PAWNS = 'square'
+EXPANSIVE = 'expansive'
+END_GAME = 'end'
 
 #Game properties
 FPS = 60

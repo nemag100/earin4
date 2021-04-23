@@ -4,23 +4,23 @@ from .piece import Piece
 
 class Board:
     def __init__(self):
-        
+
         #board is a list of 8 rows
         #row is a list of pieces that are currently in it
         #the number 0 represents empty sqare (no piece object)
         self.board = []
         self._initial_board()
-        
+
         self.player1_pcs_left = self.player2_pcs_left = 12
         self.player1_kings = self.player2_kings = 0
-    
+
     def _initial_board(self):
         '''create board with initial positions'''
         for row in range(ROWS):
             self.board.append([])
             for column in range(COLUMNS):
                 if column % 2 == ((row + 1) % 2): #draw differently on even and odd columns
-                    if row < 3: 
+                    if row < 3:
                         self.board[row].append(Piece(row,column,PLAYER1))
                     elif row > 4:
                         self.board[row].append(Piece(row,column,PLAYER2))
@@ -28,19 +28,19 @@ class Board:
                         self.board[row].append(0)
                 else:
                     self.board[row].append(0)
-    
+
     def draw_board(self, window):
         '''draw squares and stored pieces'''
         self.draw_squares(window)
-        self.draw_pieces(window)    
-      
+        self.draw_pieces(window)
+
     def draw_squares(self, window):
         '''Draws the board pattern: alternating black and white squares in window'''
         window.fill(LEFT_CORNER_SQUARE_COLOR)
         for row in range(ROWS):
             for column in range(row % 2, ROWS, 2):
                 pygame.draw.rect(window, RIGHT_CORNER_SQUARE_COLOR, (row*SQUARE_SIZE, column*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
-   
+
     def draw_pieces(self, window):
         for row in range(ROWS):
             for column in range(COLUMNS):
@@ -48,23 +48,23 @@ class Board:
                 piece = self.get_piece(row,column)
                 if piece != 0:
                     piece.draw(window)
-                                 
+
     def move_piece(self, piece, new_row, new_column):
         '''Delete a piece and create it in new position'''
         #pythonic clever swap
         self.last_move = ((piece.row, piece.column), (new_row, new_column))
         self.board[piece.row][piece.column], self.board[new_row][new_column]  = self.board[new_row][new_column], self.board[piece.row][piece.column]
-        piece.move(new_row,new_column)            
-        
+        piece.move(new_row,new_column)
+
         if new_row == ROWS - 1 or new_row == 0: #moved to the edge of the board
-            self.set_king(piece)       
-                 
+            self.set_king(piece)
+
     def get_piece(self,row,column):
         if 0 <= row < ROWS and 0 <= column < COLUMNS:
             return self.board[row][column]
         else: #index out of range
             return None
-    
+
     def get_all_pieces(self):
         pieces = []
         for row in self.board:
@@ -73,6 +73,39 @@ class Board:
                     pieces.append(piece)
         return pieces
 
+    def get_player_pieces(self, player):
+        pieces = []
+        for row in self.board:
+            for piece in row:
+                if piece != 0:
+                    if piece.color == player:
+                        pieces.append(piece)
+        return pieces
+
+    def get_number_of_pieces(self, player):
+        if player == PLAYER1:
+            return self.player1_pcs_left
+        elif player == PLAYER2:
+            return self.player2_pcs_left
+        else:
+            pass
+
+    def get_number_of_kings(self, player):
+        if player == PLAYER1:
+            return self.player1_kings
+        elif player == PLAYER2:
+            return self.player2_kings
+        else:
+            pass
+
+    def are_all_kings(self, player):
+        if player == PLAYER1:
+            return self.player1_kings == self.player1_pcs_left
+        elif player == PLAYER2:
+            return self.player2_kings == self.player2_pcs_left
+        else:
+            return False
+
     def set_king(self, piece):
         if piece.is_king() == False:
             piece.set_king()
@@ -80,7 +113,7 @@ class Board:
                 self.player1_kings += 1
             else:
                 self.player2_kings += 1
-    
+
     def add_piece(self, row, column, player, king):
         ''' use for testing purposes only, adds any piece to any position,
             overwriting existing one
@@ -98,13 +131,13 @@ class Board:
                     self.player1_pcs_left += 1
                     if king:
                         self.player2_kings += 1
-            
+
             if piece.color == PLAYER2:
                 if self.player2_pcs_left == None:
                     self.player2_pcs_left = 1
                 else:
                     self.player2_pcs_left += 1
-                         
+
     def remove_all_pieces(self):
         for row in range(ROWS):
             for col in range(COLUMNS):
@@ -113,10 +146,10 @@ class Board:
         self.player2_pcs_left = None
         self.player1_kings = 0
         self.player2_kings = 0
-    
+
     def is_king(self, piece):
         return piece.is_king()
-          
+
     def get_valid_moves(self, piece):
         '''returns a dictionary of a valid moves for the given piece
            moves are considered valid according to checker rules
@@ -124,10 +157,10 @@ class Board:
         moves = {}
         moves.update(self._get_valid_moves(piece, piece.row, piece.column, [], 2))
 
-        if len(moves) == 0: 
+        if len(moves) == 0:
             moves.update(self._get_valid_moves(piece, piece.row, piece.column, [], 1))
-        else:       
-        #delete moves contained in another move 
+        else:
+        #delete moves contained in another move
             to_del = set() #store keys of entries to delete
             del_me = False #flag to delete currently examined key
             for key, val in moves.items(): #compare the dictionary entries
@@ -140,10 +173,10 @@ class Board:
                             break
                     if del_me:
                         to_del.add(key) #if the whole shorter sequence is included in the longer one, add the shorter's key to delete
-            for key in to_del: 
-                del moves[key] #remove all entries flagged to delete     
+            for key in to_del:
+                del moves[key] #remove all entries flagged to delete
         return moves
-    
+
     def _get_valid_moves(self, piece, row, col, jump_path, step_size):
         ''' this method takes in a row and col of where the piece is currently during the jump. It also takes a jump_path so a king
         does not jump back to where it came from and to prevent jumping over the same piece twice.
@@ -156,7 +189,7 @@ class Board:
             for new_row in [up, down]:
                 if not self.can_jump_from_to(piece, row, col, new_row, new_col, step_size):
                     continue
-                
+
                 if step_size == 1:
                     moves[new_row, new_col] = []
                 else:
@@ -168,10 +201,10 @@ class Board:
                     new_jump_path.append((middle_row, middle_col))
                     moves[(new_row, new_col)] = new_jump_path
                     # recursive call
-                    
+
                     moves.update(self._get_valid_moves(piece, new_row, new_col, new_jump_path, step_size))
-        return moves    
-    
+        return moves
+
     def can_jump_from_to(self, piece, old_row, old_col, new_row, new_col, step_size) -> bool:
         ''' evaluates to True if boundaries are right and if current piece between start/end location is of different color'''
         if not (piece.is_king() or new_row == old_row + piece.direction * step_size):
@@ -191,35 +224,34 @@ class Board:
             middle_piece = self.get_piece(middle_row, middle_col)
             if middle_piece == 0 or middle_piece.color == piece.color:
                 return False
-        
+
         return True
-           
+
     def remove_piece(self, row, col):
         if (0 <= row < ROWS and 0 <= col < COLUMNS):
             piece = self.get_piece(row,col)
-            
+
             if piece != None and piece != 0:
                 if self.player2_pcs_left != None and piece.color == PLAYER2:
                     self.player2_pcs_left -= 1
                 elif self.player1_pcs_left != None and piece.color == PLAYER1:
                     self.player1_pcs_left -= 1
-            self.board[row][col] = 0    
-                     
+            self.board[row][col] = 0
+
     def winner(self):
         if self.player1_pcs_left != None and self.player1_pcs_left <= 0:
             return PLAYER2
         elif self.player2_pcs_left != None and self.player2_pcs_left <=0:
             return PLAYER1
         return None
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
+
+
+
+
+
+
+
+
+
+
+
