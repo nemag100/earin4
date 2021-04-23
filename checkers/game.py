@@ -113,7 +113,7 @@ class Game:
         #at the beginning of turn check lose condition: I have 0 pieces or I can't move:
         self.all_valid_moves = self.get_all_valid_moves_of_current_player()
         if not self.all_valid_moves or self.__winner():#no moves remaining
-            self.winner = enemy
+            self.winner = enemy if not self.__winner() == INCONCLUSIVE else INCONCLUSIVE
 
     def set_turn(self, player):
         '''Sets the game state to the turn of the player specified in the argument.'''
@@ -139,6 +139,7 @@ class Game:
                 return False # if the winner cannot be computed from the board state
         else:
             if self.board.is_inconclusive(): # if there is a tie, only AI vs. AI, just for testing
+                self.winner = INCONCLUSIVE
                 return INCONCLUSIVE
 
     def win_message(self):

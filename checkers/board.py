@@ -265,8 +265,12 @@ class Board:
             if piece != None and piece != 0:
                 if self.player2_pcs_left != None and piece.color == PLAYER2:
                     self.player2_pcs_left -= 1
+                    if piece.is_king():
+                        self.player2_kings -= 1
                 elif self.player1_pcs_left != None and piece.color == PLAYER1:
                     self.player1_pcs_left -= 1
+                    if piece.is_king():
+                        self.player1_kings -= 1
             self.board[row][col] = 0
 
     def is_inconclusive(self):
