@@ -48,6 +48,7 @@ class Minmax:
         elif game.turn == PLAYER2:
             print("ai")
             _, best_move = self.max_alphabeta(game, self.depth, self.ninf, self.inf)
+        print("Best move: ", best_move)
         return best_move
 
     def max_alphabeta(self, game, depth, alpha, beta):
@@ -123,6 +124,8 @@ class Minmax:
                 beta = min_eval
         return min_eval
 
+    def ai_move(self, game):
+        return self.alphabeta(game).last_move
 
     def board_after_ai_move(self, game):
         return self.alphabeta(deepcopy(game))

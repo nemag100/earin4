@@ -3,6 +3,7 @@ from .constants import WIDTH, HEIGHT, PLAYER1, PLAYER2, FPS
 from .display import Display
 from .game import Game
 from .minmax import Minmax
+from time import sleep
 
 class Play():
     def __init__(self):
@@ -48,14 +49,15 @@ class Play():
                     pygame.quit()
      
     def vs_ai(self, ai_PLAYER_color, depth=4):
-        self.ai_player1_color = ai_PLAYER_color
-        self.ai = Minmax(self.ai_player1_color, depth)
+        self.ai = Minmax(ai_PLAYER_color, depth)
         self.display.update()
 
         while self.game.winner == None:
             self.clock.tick(FPS)
-            self.ai_move(self.ai)
-            self.human_move()  
+            if self.game.turn == ai_PLAYER_color:
+                self.ai_move2(self.ai)
+            else:
+                self.human_move()  
             self.display.update()            
             
         self.play_ended()
@@ -65,17 +67,26 @@ class Play():
         self.ai_player2_color = PLAYER2
         self.ai_player1 = Minmax(self.ai_player1_color, PLAYER1_depth)
         self.ai_player2 = Minmax(self.ai_player2_color, PLAYER2_depth)
+        self.display.update() 
 
         while self.game.winner == None:
             self.clock.tick(FPS)
-            self.ai_move(self.ai_player1)
-            self.ai_move(self.ai_player2)  
+            if  self.game.turn == self.ai_player1_color:
+                self.ai_move2(self.ai_player1)
+            elif self.game.turn == self.ai_player2_color:
+                self.ai_move2(self.ai_player2)
             self.display.update()            
             
         self.play_ended()
 
             
     def ai_move(self, ai_player):
-        if  self.game.turn == ai_player.ai_color:
-                self.game.board = ai_player.board_after_ai_move(self.game)
-                self.game.change_turn()
+        sleep(1)
+        self.game.board = ai_player.board_after_ai_move(self.game)
+        self.game.change_turn()
+        
+    def ai_move2(self, ai_player):
+        sleep(1)
+        self.piece_coords, self.move_coords = ai_player.ai_move(self.game)
+        self.game.select_piece(*self.piece_coords)
+        self.game.move_piece(*self.move_coords)

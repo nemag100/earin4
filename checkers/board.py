@@ -52,6 +52,7 @@ class Board:
     def move_piece(self, piece, new_row, new_column):
         '''Delete a piece and create it in new position'''
         #pythonic clever swap
+        self.last_move = ((piece.row, piece.column), (new_row, new_column))
         self.board[piece.row][piece.column], self.board[new_row][new_column]  = self.board[new_row][new_column], self.board[piece.row][piece.column]
         piece.move(new_row,new_column)            
         

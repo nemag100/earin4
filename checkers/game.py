@@ -91,6 +91,7 @@ class Game:
             self.board.move_piece(self.selected_piece, row, column)
             for piece in self.valid_moves[(row,column)]: #this dictionary entry contains the pieces to be removed
                 self.__remove_piece(piece)    
+            
             self.change_turn()
             self.valid_moves = {}
             
