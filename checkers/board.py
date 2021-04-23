@@ -4,10 +4,12 @@ from .piece import Piece
 
 class Board:
     def __init__(self):
-
-        #board is a list of 8 rows
-        #row is a list of pieces that are currently in it
-        #the number 0 represents empty sqare (no piece object)
+        '''
+        Class for storing the game board.
+         - board is a list of 8 rows.
+         - row is a list of pieces that are currently in it
+         - the number 0 represents empty sqare (no piece object)
+        '''
         self.board = []
         self._initial_board()
 
@@ -15,7 +17,7 @@ class Board:
         self.player1_kings = self.player2_kings = 0
 
     def _initial_board(self):
-        '''create board with initial positions'''
+        '''Creates board with initial positions.'''
         for row in range(ROWS):
             self.board.append([])
             for column in range(COLUMNS):
@@ -30,28 +32,30 @@ class Board:
                     self.board[row].append(0)
 
     def draw_board(self, window):
-        '''draw squares and stored pieces'''
+        '''Draws squares and stored pieces.'''
         self.draw_squares(window)
         self.draw_pieces(window)
 
     def draw_squares(self, window):
-        '''Draws the board pattern: alternating black and white squares in window'''
+        '''Draws the board pattern: alternating black and white squares in window.'''
         window.fill(LEFT_CORNER_SQUARE_COLOR)
         for row in range(ROWS):
             for column in range(row % 2, ROWS, 2):
                 pygame.draw.rect(window, RIGHT_CORNER_SQUARE_COLOR, (row*SQUARE_SIZE, column*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
     def draw_pieces(self, window):
+        '''Draws pieces on board.'''
         for row in range(ROWS):
             for column in range(COLUMNS):
-               # piece = self.board[row][column]
                 piece = self.get_piece(row,column)
                 if piece != 0:
                     piece.draw(window)
 
     def move_piece(self, piece, new_row, new_column):
-        '''Delete a piece and create it in new position'''
-        #pythonic clever swap
+        '''Deletes a piece and create it in new position.
+            piece - piece to move
+            new_row, new_column - coordinates of where to move the piece'''
+        # pythonic clever swap
         self.last_move = ((piece.row, piece.column), (new_row, new_column))
         self.board[piece.row][piece.column], self.board[new_row][new_column]  = self.board[new_row][new_column], self.board[piece.row][piece.column]
         piece.move(new_row,new_column)
@@ -60,12 +64,14 @@ class Board:
             self.set_king(piece)
 
     def get_piece(self,row,column):
+        '''Returns piece.'''
         if 0 <= row < ROWS and 0 <= column < COLUMNS:
             return self.board[row][column]
         else: #index out of range
             return None
 
     def get_all_pieces(self):
+        '''Returns all pieces.'''
         pieces = []
         for row in self.board:
             for piece in row:
@@ -74,6 +80,7 @@ class Board:
         return pieces
 
     def get_player_pieces(self, player):
+        '''Returns all pieces of player specified by the argument.'''
         pieces = []
         for row in self.board:
             for piece in row:
@@ -83,6 +90,7 @@ class Board:
         return pieces
 
     def get_number_of_pieces(self, player):
+        '''Returns number of all pieces of player specified by the argument.'''
         if player == PLAYER1:
             return self.player1_pcs_left
         elif player == PLAYER2:
@@ -91,6 +99,7 @@ class Board:
             pass
 
     def get_number_of_kings(self, player):
+        '''Returns number of king pieces of player specified by the argument.'''
         if player == PLAYER1:
             return self.player1_kings
         elif player == PLAYER2:
@@ -98,15 +107,34 @@ class Board:
         else:
             pass
 
-    def are_all_kings(self, player):
+    def are_all_kings(self, player=None):
+        '''Checks if all pieces of a player are kings.
+            player - specifies for which player to check
+                     if player is None, returns the result for both players'''
         if player == PLAYER1:
             return self.player1_kings == self.player1_pcs_left
         elif player == PLAYER2:
             return self.player2_kings == self.player2_pcs_left
+        elif player == None:
+            return self.are_all_kings(PLAYER1) and self.are_all_kings(PLAYER2)
+        else:
+            return False
+
+    def most_are_kings(self, player=None):
+        '''Checks if most of pieces are kings.
+            player - specifies for which player to check
+                     if player is None, returns the result for both players'''
+        if player == PLAYER1:
+            return self.player1_kings / self.player1_pcs_left >= 0.5
+        elif player == PLAYER2:
+            return self.player2_kings / self.player2_pcs_left >= 0.5
+        elif player == None:
+            return self.most_are_kings(PLAYER1) and self.most_are_kings(PLAYER2)
         else:
             return False
 
     def set_king(self, piece):
+        '''Sets the given piece king'''
         if piece.is_king() == False:
             piece.set_king()
             if piece.color == PLAYER1:
@@ -139,6 +167,7 @@ class Board:
                     self.player2_pcs_left += 1
 
     def remove_all_pieces(self):
+        '''Removes all pieces from the board.'''
         for row in range(ROWS):
             for col in range(COLUMNS):
                 self.remove_piece(row,col)
@@ -148,11 +177,12 @@ class Board:
         self.player2_kings = 0
 
     def is_king(self, piece):
+        '''Returns if the specified piece is king'''
         return piece.is_king()
 
     def get_valid_moves(self, piece):
-        '''returns a dictionary of a valid moves for the given piece
-           moves are considered valid according to checker rules
+        '''Returns a dictionary of a valid moves for the given piece
+           moves are considered valid according to checker rules.
         '''
         moves = {}
         moves.update(self._get_valid_moves(piece, piece.row, piece.column, [], 2))
@@ -178,9 +208,9 @@ class Board:
         return moves
 
     def _get_valid_moves(self, piece, row, col, jump_path, step_size):
-        ''' this method takes in a row and col of where the piece is currently during the jump. It also takes a jump_path so a king
+        ''' This method takes in a row and col of where the piece is currently during the jump. It also takes a jump_path so a king
         does not jump back to where it came from and to prevent jumping over the same piece twice.
-        Finally a step_size is provided: if it's 1 only short jumps are considered, if 2 then jump chains are considered
+        Finally a step_size is provided: if it's 1 only short jumps are considered, if 2 then jump chains are considered.
         '''
         up, down, left, right = [x + y * step_size for x in [row, col] for y in [-1, +1]]
         moves = {}
@@ -206,7 +236,7 @@ class Board:
         return moves
 
     def can_jump_from_to(self, piece, old_row, old_col, new_row, new_col, step_size) -> bool:
-        ''' evaluates to True if boundaries are right and if current piece between start/end location is of different color'''
+        ''' Evaluates to True if boundaries are right and if current piece between start/end location is of different color.'''
         if not (piece.is_king() or new_row == old_row + piece.direction * step_size):
             # invalid direction
             return False
@@ -228,6 +258,7 @@ class Board:
         return True
 
     def remove_piece(self, row, col):
+        '''Remove piece of coordinates specified by row and col arguments.'''
         if (0 <= row < ROWS and 0 <= col < COLUMNS):
             piece = self.get_piece(row,col)
 
@@ -238,7 +269,16 @@ class Board:
                     self.player1_pcs_left -= 1
             self.board[row][col] = 0
 
+    def is_inconclusive(self):
+        '''For AI vs AI game only.
+            Returns True if each of the players has only one piece and that piece is a king. Otherwise evaluates to False.'''
+        if self.player1_kings == 1 and self.player2_kings == 1:
+            if self.player1_pcs_left == 1 and self.player2_pcs_left == 1:
+                return True
+        return False
+
     def winner(self):
+        '''Checks for the winner who won by taking all the pieces of the opponent.'''
         if self.player1_pcs_left != None and self.player1_pcs_left <= 0:
             return PLAYER2
         elif self.player2_pcs_left != None and self.player2_pcs_left <=0:

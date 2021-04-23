@@ -39,5 +39,8 @@ SQUARED_PAWNS = 'square'
 EXPANSIVE = 'expansive'
 END_GAME = 'end'
 
+#Inconclusive result in AI vs AI mode:
+INCONCLUSIVE = 'nobody'
+
 #Game properties
 FPS = 60
