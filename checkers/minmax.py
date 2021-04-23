@@ -8,7 +8,7 @@ class Minmax:
 
     def __init__(self, ai_color, depth=4):
         '''depth - search depth for alpha-beta algorithm
-           AI maximizes, human minimizes'''
+           PLAYER1 minimizes, PLAYER2 maximizes'''
         self.ai_color = ai_color
         self.depth = depth
         self.__set_human_color()
@@ -42,10 +42,10 @@ class Minmax:
         return games_after_one_move
 
     def alphabeta(self, game):
-        if game.turn == self.human_color:
+        if game.turn == PLAYER1:
             print("human")
             _, best_move = self.min_alphabeta(game, self.depth, self.ninf, self.inf)
-        elif game.turn == self.ai_color:
+        elif game.turn == PLAYER2:
             print("ai")
             _, best_move = self.max_alphabeta(game, self.depth, self.ninf, self.inf)
         return best_move
