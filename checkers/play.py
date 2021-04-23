@@ -70,6 +70,10 @@ class Play():
         self.display.update() 
 
         while self.game.winner == None:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return 0
             self.clock.tick(FPS)
             if  self.game.turn == self.ai_player1_color:
                 self.ai_move2(self.ai_player1)
@@ -79,11 +83,6 @@ class Play():
             
         self.play_ended()
 
-            
-    def ai_move(self, ai_player):
-        sleep(1)
-        self.game.board = ai_player.board_after_ai_move(self.game)
-        self.game.change_turn()
         
     def ai_move2(self, ai_player):
         sleep(1)
