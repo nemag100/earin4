@@ -11,15 +11,17 @@ class Play():
         self.clock = pygame.time.Clock()
         self.game = Game()
         self.display = Display(self.WINDOW, self.game)
+        
+        self.ai_player2 = None
     
     def vs_human(self):
         while self.game.winner == None:
             self.clock.tick(FPS)
-            self.human_move_with_mouse()           
+            self.human_move()           
             self.display.update()
         self.play_ended()
             
-    def human_move_with_mouse(self):
+    def human_move(self):
         '''catch mouse input: either a valid piece move or quit'''
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -45,45 +47,35 @@ class Play():
                if event.type == pygame.QUIT:
                     pygame.quit()
      
-         
-    def vs_ai(self):
-        ai_player = PLAYER2
-        clock = pygame.time.Clock()
-        game = Game()
-        display = Display(self.WINDOW, game)
-        ai = Minmax(ai_player, depth=4)
-        display.update()
+    def vs_ai(self, ai_PLAYER_color, depth=4):
+        self.ai_player1_color = ai_PLAYER_color
+        self.ai = Minmax(self.ai_player1_color, depth)
+        self.display.update()
 
-
-        #setup_board_test4(game)
-        while game.winner == None:
-            clock.tick(FPS)
-
-            if  game.turn == ai_player:
-                game.board = ai.board_after_ai_move(game)
-                game.change_turn()
-                
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    return 0
-                    
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    mouse_pos = pygame.mouse.get_pos()
-                    row, col  = display.get_mouse_row_column(mouse_pos)
-                    game.select_piece(row, col)
-                
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    mouse_pos = pygame.mouse.get_pos()
-                    row, col  = display.get_mouse_row_column(mouse_pos)
-                    
-                    game.move_piece(row, col)
-            display.update()            
+        while self.game.winner == None:
+            self.clock.tick(FPS)
+            self.ai_move(self.ai)
+            self.human_move()  
+            self.display.update()            
             
-        game.win_message()
-        display.update() 
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-            #execution ended, winner is determined, wait for clicking x
+        self.play_ended()
+
+    def ai_vs_ai(self, PLAYER1_depth=4, PLAYER2_depth=4):
+        self.ai_player1_color = PLAYER1
+        self.ai_player2_color = PLAYER2
+        self.ai_player1 = Minmax(self.ai_player1_color, PLAYER1_depth)
+        self.ai_player2 = Minmax(self.ai_player2_color, PLAYER2_depth)
+
+        while self.game.winner == None:
+            self.clock.tick(FPS)
+            self.ai_move(self.ai_player1)
+            self.ai_move(self.ai_player2)  
+            self.display.update()            
+            
+        self.play_ended()
+
+            
+    def ai_move(self, ai_player):
+        if  self.game.turn == ai_player.ai_color:
+                self.game.board = ai_player.board_after_ai_move(self.game)
+                self.game.change_turn()

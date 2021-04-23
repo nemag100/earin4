@@ -11,7 +11,7 @@ class Minmax:
            AI maximizes, human minimizes'''
         self.ai_color = ai_color
         self.depth = depth
-        self.human_color = self.__set_human_color()
+        self.__set_human_color()
         self.inf   = math.inf
         self.ninf  = -math.inf
 
