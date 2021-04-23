@@ -17,4 +17,8 @@ class Display:
             row, column = move
             pygame.draw.circle(self.window, GREEN, (column * SQUARE_SIZE + SQUARE_SIZE // 2, row * SQUARE_SIZE + SQUARE_SIZE // 2), VALID_MOVES_MARKER_RADIUS)
             
-        
+    def get_mouse_row_column(self, mouse_pos):
+        x, y = mouse_pos
+        row = y // SQUARE_SIZE
+        column = x // SQUARE_SIZE
+        return row, column        
