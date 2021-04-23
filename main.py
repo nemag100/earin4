@@ -117,7 +117,7 @@ def play_vs_ai():
     clock = pygame.time.Clock()
     game = Game()
     display = Display(WINDOW, game)
-    ai = Minmax(ai_player, depth=6)
+    ai = Minmax(ai_player, depth=4)
     display.update()
 
 

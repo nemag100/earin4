@@ -6,20 +6,20 @@ from .game import Game
 
 class Minmax:
 
-    def __init__(self, human_color, depth=4):
+    def __init__(self, ai_color, depth=4):
         '''depth - search depth for alpha-beta algorithm
            AI maximizes, human minimizes'''
-        self.human_color = human_color
+        self.ai_color = ai_color
         self.depth = depth
-        self.ai_color = self.__set_ai_color()
+        self.human_color = self.__set_human_color()
         self.inf   = math.inf
         self.ninf  = -math.inf
 
-    def __set_ai_color(self):
-        if self.human_color == PLAYER1:
-            self.ai = PLAYER2
+    def __set_human_color(self):
+        if self.ai_color == PLAYER1:
+            self.human_color = PLAYER2
         else:
-            self.turn = PLAYER1
+            self.human_color = PLAYER1
 
     def get_all_moves(self, game):
         games_after_one_move = [] #list of games to return
@@ -45,7 +45,7 @@ class Minmax:
         if game.turn == self.human_color:
             print("human")
             _, best_move = self.min_alphabeta(game, self.depth, self.ninf, self.inf)
-        elif game.simulation.turn == self.ai_color:
+        elif game.turn == self.ai_color:
             print("ai")
             _, best_move = self.max_alphabeta(game, self.depth, self.ninf, self.inf)
         return best_move
