@@ -1,3 +1,4 @@
+import sys
 import pygame
 from .constants import WIDTH, HEIGHT, PLAYER1, PLAYER2, FPS, CLASSIC, SQUARED_PAWNS, EXPANSIVE, END_GAME
 from .display import Display
@@ -50,6 +51,7 @@ class Play():
            for event in pygame.event.get():
                if event.type == pygame.QUIT:
                     pygame.quit()
+                    sys.exit(0)
 
     def vs_ai(self, ai_PLAYER_color, depth=4, ai_heuristic=CLASSIC, adaptive_heuristics=False):
         '''Method for the player vs. AI game mode.
